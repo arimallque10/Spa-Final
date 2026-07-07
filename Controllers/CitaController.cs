@@ -101,6 +101,17 @@ namespace Spa.Controllers
             string hora,
             int cantidadPersonas = 1)
         {
+            if (string.IsNullOrWhiteSpace(dni) ||
+                dni.Length != 8 ||
+                !dni.All(char.IsDigit))
+            {
+                ModelState.AddModelError(
+                    "dni",
+                    "El DNI debe contener exactamente 8 números."
+                );
+
+                return View("~/Views/Home/cita.cshtml");
+            }
             if (string.IsNullOrWhiteSpace(servicio))
             {
                 ModelState.AddModelError("servicio", "Debe seleccionar un servicio.");
