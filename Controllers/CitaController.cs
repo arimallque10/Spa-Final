@@ -118,10 +118,45 @@ namespace Spa.Controllers
                 return View("~/Views/Home/cita.cshtml");
             }
 
-            // Combinar fecha + hora del formulario en un solo DateTime
+            // Combinar la fecha y la hora del formulario
             if (!DateTime.TryParse($"{fecha} {hora}", out var fechaHora))
             {
-                ModelState.AddModelError("fecha", "Fecha u hora inválida.");
+                ModelState.AddModelError(
+                    "fecha",
+                    "Debe seleccionar una fecha válida."
+                );
+
+                ModelState.AddModelError(
+                    "hora",
+                    "Debe seleccionar una hora válida."
+                );
+
+                return View("~/Views/Home/cita.cshtml");
+            }
+
+            // No permitir citas en fechas u horas pasadas
+            if (fechaHora < DateTime.Now)
+            {
+                ModelState.AddModelError(
+                    "fecha",
+                    "La fecha y la hora de la cita no pueden estar en el pasado."
+                );
+
+                return View("~/Views/Home/cita.cshtml");
+            }
+
+            // Horario de atención del spa
+            var horaApertura = new TimeSpan(10, 0, 0);
+            var horaCierre = new TimeSpan(21, 0, 0);
+
+            if (fechaHora.TimeOfDay < horaApertura ||
+                fechaHora.TimeOfDay > horaCierre)
+            {
+                ModelState.AddModelError(
+                    "hora",
+                    "El horario de atención es de 10:00 a. m. a 9:00 p. m."
+                );
+
                 return View("~/Views/Home/cita.cshtml");
             }
 
@@ -184,6 +219,24 @@ namespace Spa.Controllers
             if (servicioSeleccionado == null)
             {
                 ModelState.AddModelError("servicio", "El servicio seleccionado no está disponible.");
+                return View("~/Views/Home/cita.cshtml");
+            }
+            
+            // Comprobar que el mismo servicio no esté reservado
+            // en la fecha y hora seleccionadas
+            bool existeCitaDuplicada = _context.Citas.Any(c =>
+                c.FechaHora == fechaHora &&
+                c.ServicioId == servicioSeleccionado.Id &&
+                c.Confirmada
+            );
+
+            if (existeCitaDuplicada)
+            {
+                ModelState.AddModelError(
+                    "hora",
+                    "Ya existe una cita para este servicio en la fecha y hora seleccionadas. Elige otro horario."
+                );
+
                 return View("~/Views/Home/cita.cshtml");
             }
 

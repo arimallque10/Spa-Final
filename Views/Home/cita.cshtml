@@ -58,12 +58,28 @@
                 <div class="form-group">
                     <label for="fecha">Fecha</label>
                     <input type="date" id="fecha" name="fecha" required>
+                    @Html.ValidationMessage(
+                        "fecha",
+                        "",
+                        new
+                        {
+                            style = "color: #b00020; display: block; margin-top: 4px;"
+                        }
+                    )
                 </div>
 
                 <div class="form-group">
                     <label for="hora">Hora</label>
                     <input type="time" id="hora" name="hora" min="10:00" max="21:00" required>
                     <small id="ayudaHora" style="color:#8B4513;">Horario de atención: 10:00 am - 9:00 pm</small>
+                    @Html.ValidationMessage(
+                        "hora",
+                        "",
+                        new
+                        {
+                            style = "color: #b00020; display: block; margin-top: 4px;"
+                        }
+                    )
                 </div>
 
                 <div class="form-group">
