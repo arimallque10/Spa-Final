@@ -221,7 +221,7 @@ namespace Spa.Controllers
                 ModelState.AddModelError("servicio", "El servicio seleccionado no está disponible.");
                 return View("~/Views/Home/cita.cshtml");
             }
-            
+
             // Comprobar que el mismo servicio no esté reservado
             // en la fecha y hora seleccionadas
             bool existeCitaDuplicada = _context.Citas.Any(c =>
@@ -295,9 +295,17 @@ namespace Spa.Controllers
                 : new SinDescuento();
 
             // RF1, RF2 y RF3 ejecutados aquí de forma limpia
-            Cita citaProcesada = _citaService.AgendarCita(cliente, servicioSeleccionado, fechaHora, cantidadPersonas, estrategia);
+            _citaService.AgendarCita(
+            cliente,
+            servicioSeleccionado,
+            fechaHora,
+            cantidadPersonas,
+            estrategia
+        );
 
-            return View("~/Views/Home/bienvenida.cshtml", citaProcesada);
+        TempData["MensajeExito"] = "¡Cita registrada con éxito!";
+
+        return RedirectToAction("Crear", "Cita");
         }
     }
 }

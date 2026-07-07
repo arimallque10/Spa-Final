@@ -11,6 +11,23 @@
 
         <div class="cita-formulario">
             <h2>SEPARA TU CITA</h2>
+            @if (TempData["MensajeExito"] != null)
+            {
+                <div style="
+                    background-color: #e8f5e9;
+                    color: #1b5e20;
+                    border: 1px solid #81c784;
+                    padding: 12px;
+                    margin-bottom: 18px;
+                    border-radius: 8px;
+                    text-align: center;
+                    font-weight: bold;"
+                    role="alert">
+
+                    @TempData["MensajeExito"]
+                </div>
+            }
+
 
             <form asp-action="Crear"
                   method="post"
